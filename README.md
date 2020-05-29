@@ -1,4 +1,4 @@
-# hashing-test
+# CuckooHashing
 
 ## Project setup
 ```
