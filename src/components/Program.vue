@@ -78,39 +78,39 @@
 
             this.prepareArrays(this.count, this.size)
 
-            console.log(this.insert("h", 1,))
-            this.insert("harun", 1,)
-            this.insert("haruns", 1)
-            this.insert("w", 1)
-            this.insert("e", 1)
-            this.insert("adsa", 1)
-            this.insert("rcd", 1)
-            this.insert("harasdaun", 1)
-            this.insert("asd", 1)
-            this.insert("sad", 1)
-            this.insert("cs", 1)
-            this.insert("asd", 1)
-            this.insert("xcs", 1)
-            this.insert("dvgb", 1)
-            this.insert("wuyuad", 1)
-            this.insert("hmyte", 1)
-            this.insert("tut", 1)
-            this.insert("sadsad", 1)
-            this.insert("fvrvgb", 1)
-            this.insert("muıööılö", 1)
-            this.insert("32r4ftb", 1)
-            this.insert("mıöıuyedcd", 1)
-            this.insert("23rgrtvbf", 1)
-            this.insert("qwr34fvrt", 1)
-            this.insert("wqdwdeftby", 1)
-            this.insert("yntfdecec", 1)
-            this.insert("ergtbvf", 1)
-            this.insert("et35gtver", 1)
-            this.insert("f3ftb5nbt", 1)
-            this.insert("wecfynvıö", 1)
-            this.insert("wecbytmoılu", 1)
-            this.insert("gölçıöyn", 1)
-            this.insert("rılumythreg", 1)
+            // console.log(this.insert("h", 1,))
+            // this.insert("harun", 1,)
+            // this.insert("haruns", 1)
+            // this.insert("w", 1)
+            // this.insert("e", 1)
+            // this.insert("adsa", 1)
+            // this.insert("rcd", 1)
+            // this.insert("harasdaun", 1)
+            // this.insert("asd", 1)
+            // this.insert("sad", 1)
+            // this.insert("cs", 1)
+            // this.insert("asd", 1)
+            // this.insert("xcs", 1)
+            // this.insert("dvgb", 1)
+            // this.insert("wuyuad", 1)
+            // this.insert("hmyte", 1)
+            // this.insert("tut", 1)
+            // this.insert("sadsad", 1)
+            // this.insert("fvrvgb", 1)
+            // this.insert("muıööılö", 1)
+            // this.insert("32r4ftb", 1)
+            // this.insert("mıöıuyedcd", 1)
+            // this.insert("23rgrtvbf", 1)
+            // this.insert("qwr34fvrt", 1)
+            // this.insert("wqdwdeftby", 1)
+            // this.insert("yntfdecec", 1)
+            // this.insert("ergtbvf", 1)
+            // this.insert("et35gtver", 1)
+            // this.insert("f3ftb5nbt", 1)
+            // this.insert("wecfynvıö", 1)
+            // this.insert("wecbytmoılu", 1)
+            // this.insert("gölçıöyn", 1)
+            // this.insert("rılumythreg", 1)
             console.log(this.arrays)
 
         },
@@ -145,7 +145,7 @@
                 return ((key + 9) % this.size)
             },
             hashFunction3(key) {
-                return ((key * 199 * 179 * 7 * 5) % this.size)
+                return ((key * 199 * 5*key+key *3) % this.size)
             },
             hashFunction4(key) {
                 return ((key * key * 197) % this.size)
@@ -163,7 +163,8 @@
                 var asdf  = this.Exist(key)
                 if(asdf[0]!=6){
                     console.log("Key already exists at table "+asdf[0]+ "and index "+asdf[1])
-                    this.message.unshift( "Key already exists at table "+asdf[0]+ "and index "+asdf[1])
+                    this.message.unshift( key+" already exists at table "+asdf[0]+ " and index "+asdf[1])
+                    return;
                 }
 
 
@@ -322,7 +323,7 @@
                 for (let i = 0; i < this.count; i++) {
                     for (let j = 0; j < this.size; j++) {
                         if (this.arrays[i][j][0] == text)
-                            return [i,j]
+                            return [++i,j]
                     }
                 }
                 return [6,31]
