@@ -1,24 +1,33 @@
 <template>
     <div class="text-center">
-       <v-row> <v-col> </v-col> </v-row>
         <v-row>
-            <v-col v-for="(array,index) in arrays" :key="array.id">
+            <v-col></v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="2" v-for="(array,index) in arrays" :key="array.id">
                 <v-simple-table dark>
                     <template v-slot:default>
                         <thead>
                         <tr>
-                            <th class="text-center">Array:{{index+1}} </th>
+                            <th class="text-center">Hash Table {{index+1}}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(item) in array" :key="item.id">
-                            <td>{{ item }}</td>
+                        <tr v-for="(item) in array" :key="item.id" :style=item[1]>
+                            <td>{{ item[0] }}</td>
                         </tr>
                         </tbody>
                     </template>
-                </v-simple-table>
-            </v-col>
 
+                </v-simple-table>
+                {{loadFactor[index]}}
+            </v-col>
+            <v-col cols="2">
+                <v-card>
+                    Terminal
+                    {{message}}
+                </v-card>
+            </v-col>
         </v-row>
 
         <v-row align="center" justify="center">
@@ -26,8 +35,8 @@
 
                 <v-text-field v-model="text"/>
                 <v-btn rounded color="primary" dark @click="Funktion(text)">Insert</v-btn>
-                <v-btn rounded color="primary" dark>Search</v-btn>
-                <v-btn rounded color="primary" dark>Delete</v-btn>
+                <v-btn rounded color="primary" dark @click="Search(text)">Search</v-btn>
+                <v-btn rounded color="primary" dark @click="Delete(text)">Delete</v-btn>
                 <v-btn rounded color="primary" dark to="/">Reset The Constant</v-btn>
                 <!--          <v-text-field v-model="text"/>-->
 
@@ -53,22 +62,10 @@
                 style: "background: red",
                 arrays: [],
                 temp: [],
+                loadFactor: [],
                 text: "",
-                desserts: [
-                    {
-                        name: 'Frozen Yogurt'
-                    },
-                    {
-                        name: 'Ice cream sandwich'
-                    },
-                    {
-                        name: 'Eclair'
-                    },
-                    {
-                        name: 'Cupcake'
-                    },
-                ],
-
+                message: [],
+                log:[]
             }
         },
         created() {
@@ -81,31 +78,46 @@
 
             this.prepareArrays(this.count, this.size)
 
-            console.log(this.insert("h"))
-            // this.insert("harun", 1)
-            // this.insert("haruns", 1)
-            // this.insert("w", 1)
-            // this.insert("e", 1)
-            // this.insert("adsa", 1)
-            // this.insert("rcd", 1)
-            // this.insert("harasdaun", 1)
-            // this.insert("asd", 1)
-            // this.insert("sad", 1)
-            // this.insert("cs", 1)
-            // this.insert("asd", 1)
-            // this.insert("xcs", 1)
-            // this.insert("dvgb", 1)
-            // this.insert("wuyuad", 1)
-            // this.insert("hmyte", 1)
-            // this.insert("tut", 1)
-
+            console.log(this.insert("h", 1,))
+            this.insert("harun", 1,)
+            this.insert("haruns", 1)
+            this.insert("w", 1)
+            this.insert("e", 1)
+            this.insert("adsa", 1)
+            this.insert("rcd", 1)
+            this.insert("harasdaun", 1)
+            this.insert("asd", 1)
+            this.insert("sad", 1)
+            this.insert("cs", 1)
+            this.insert("asd", 1)
+            this.insert("xcs", 1)
+            this.insert("dvgb", 1)
+            this.insert("wuyuad", 1)
+            this.insert("hmyte", 1)
+            this.insert("tut", 1)
+            this.insert("sadsad", 1)
+            this.insert("fvrvgb", 1)
+            this.insert("muıööılö", 1)
+            this.insert("32r4ftb", 1)
+            this.insert("mıöıuyedcd", 1)
+            this.insert("23rgrtvbf", 1)
+            this.insert("qwr34fvrt", 1)
+            this.insert("wqdwdeftby", 1)
+            this.insert("yntfdecec", 1)
+            this.insert("ergtbvf", 1)
+            this.insert("et35gtver", 1)
+            this.insert("f3ftb5nbt", 1)
+            this.insert("wecfynvıö", 1)
+            this.insert("wecbytmoılu", 1)
+            this.insert("gölçıöyn", 1)
+            this.insert("rılumythreg", 1)
             console.log(this.arrays)
 
         },
 
         methods: {
             Funktion(text) {
-             this.insert(text,1 )
+                this.insert(text, 1, "background: green");
             },
             hashing() {
                 console.log("hashing method start")
@@ -117,11 +129,14 @@
                 for (var j = 0; j < count; j++) {
                     this.temp = new Array(size);
                     for (var i = 0; i < size; i++) {
-                        this.temp[i] = "";
+                        var temp2 = new Array(2);
+                        temp2[0] = "";
+                        temp2[1] = "background: black";
+                        this.temp[i] = temp2;
                     }
                     this.arrays[j] = this.temp;
                 }
-
+                this.loadFactor = new Array(count);
             },
             hashFunction1(key) {
                 return (key % this.size);
@@ -138,8 +153,22 @@
             hashFunction5(key) {
                 return ((key * 179 * 179) % this.size)
             },
-            insert(key, tryC) {
-                console.log(key + " Try to locate at hash table "+tryC);
+            insert(key, tryC, color = "background:green", collusion=0) {
+                if(collusion>this.count*this.size){
+                    console.log("Loop detected")
+                    this.message.unshift("Loop detected while inserting "+key+".")
+                    return
+                }
+
+                var asdf  = this.Exist(key)
+                if(asdf[0]!=6){
+                    console.log("Key already exists at table "+asdf[0]+ "and index "+asdf[1])
+                    this.message.unshift( "Key already exists at table "+asdf[0]+ "and index "+asdf[1])
+                }
+
+
+                console.log("Key " + key + " will locate at hash table " + tryC);
+                this.message.unshift( "* Key " + key + " will locate at hash table " + tryC);
                 var sum = 0;
                 for (var i = 0; i < key.length; i++) {
                     sum += (key.charAt(i)).charCodeAt(0);
@@ -153,72 +182,151 @@
 
 
                 var temp = "";
+
                 switch (tryC) {
                     case 1:
-                        if (this.arrays[0][result1] == "") {
-                            this.arrays[0][result1] = key;
+                        if (this.arrays[0][result1][0] == "") {
+                            this.arrays[0][result1][0] = key;
+                            this.arrays[0][result1][1] = color;
+                            this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
                         } else {
-                            console.log("Collision occured in 1 for key "+key)
-                            temp = this.arrays[0][result1];
-                            this.arrays[0][result1] = key;
-                            this.insert(temp, 2);
+                            console.log("Collision("+collusion+") occured in table 1 for key " + key)
+                            this.message.unshift("- Collision("+collusion+") occured in table 1 for key " + key)
+                            temp = this.arrays[0][result1][0];
+                            this.arrays[0][result1][0] = key;
+                            this.insert(temp, 2, "background: red", ++collusion);
                         }
+
                         break
                     case 2:
-                        if (this.arrays[1][result2] == "") {
-                            this.arrays[1][result2] = key;
+                        if (this.arrays[1][result2][0] == "") {
+                            this.arrays[1][result2][0] = key;
+                            this.arrays[1][result2][1] = color;
+                            this.message.unshift( key + " is placed in " + tryC + "with collision/s" + collusion)
                         } else {
-                            console.log("Collision occured in 2 for key "+key)
-                            temp = this.arrays[1][result2];
-                            this.arrays[1][result2] = key;
+                            console.log("Collision("+collusion+") occured in table 2 for key " + key)
+                            this.message.unshift( "- Collision("+collusion+") occured in table 2 for key " + key)
+                            temp = this.arrays[1][result2][0];
+                            this.arrays[1][result2][0] = key;
                             if (this.count > 2)
-                                this.insert(temp, 3);
-                            else
-                                this.insert(temp, 1);
+                                this.insert(temp, 3, "background: brown", ++collusion);
+                            else {
+                                this.insert(temp, 1, color, ++collusion);
+                            }
                         }
+
                         break
                     case 3:
-                        if (this.arrays[2][result3] == "") {
-                            this.arrays[2][result3] = key;
+                        if (this.arrays[2][result3][0] == "") {
+                            this.arrays[2][result3][0] = key;
+                            this.arrays[2][result3][1] = color;
+                            this.message.unshift( key + " is placed in " + tryC + "with collision/s" + collusion)
                         } else {
-                            console.log("Collision occured in 3 for key "+key)
-                            temp = this.arrays[2][result3];
-                            this.arrays[2][result3] = key;
+                            console.log("Collision("+collusion+") occured in table 3 for key " + key)
+                            this.message.unshift( "- Collision("+collusion+") occured in table 3 for key " + key)
+                            temp = this.arrays[2][result3][0];
+                            this.arrays[2][result3][0] = key;
                             if (this.count > 3)
-                                this.insert(temp, 4);
+                                this.insert(temp, 4, "background: aqua", ++collusion);
                             else
-                                this.insert(temp, 1);
+                                this.insert(temp, 1, color, ++collusion);
                         }
+                        // this.arrays[2][result3][1] ="background: green";
+
                         break
                     case 4:
-                        if (this.arrays[3][result4] == "") {
-                            this.arrays[3][result4] = key;
+                        if (this.arrays[3][result4][0] == "") {
+                            this.arrays[3][result4] [0] = key;
+                            this.arrays[3][result4][1] = color;
+                            this.message.unshift( key + " is placed in " + tryC + "with collision/s" + collusion)
                         } else {
-                            console.log("Collision occured in 4 for key "+key)
-                            temp = this.arrays[3][result4];
-                            this.arrays[3][result4] = key;
+                            console.log("Collision("+collusion+") occured in table 4 for key " + key)
+                            this.message.unshift( "- Collision("+collusion+") occured in table 4 for key " + key)
+                            temp = this.arrays[3][result4][0];
+                            this.arrays[3][result4][0] = key;
                             if (this.count > 4)
-                                this.insert(temp, 5);
+                                this.insert(temp, 5, "background: orange", ++collusion);
                             else
-                                this.insert(temp, 1);
+                                this.insert(temp, 1, color, ++collusion);
                         }
+                        // this.arrays[3][result4][1] ="background: green";
+
                         break
                     case 5:
-                        if (this.arrays[4][result5] == "") {
-                            this.arrays[4][result5] = key;
+                        if (this.arrays[4][result5][0] == "") {
+                            this.arrays[4][result5][0] = key;
+                            this.arrays[4][result5][1] = color;
+                            this.message.unshift( key + " is placed in " + tryC + "with collision/s" + collusion)
                         } else {
-                            console.log("Collision occured in 5 for key "+key)
-                            temp = this.arrays[4][result5];
-                            this.arrays[4][result5] = key;
-                            this.insert(temp, 1);
+                            console.log("Collision("+collusion+") occured in table 5 for key " + key)
+                            this.message.unshift( "- Collision("+collusion+") occured in table 5 for key " + key)
+                            temp = this.arrays[4][result5][0];
+                            this.arrays[4][result5][0] = key;
+                            this.insert(temp, 1, color, ++collusion);
                         }
+                        // this.arrays[4][result5][1] ="background: green";
+
                         break
 
                 }
+                for (let i = 0; i < this.count; i++) {
+                    var asd = 0;
+                    for (let j = 0; j < this.size; j++) {
+                        if (this.arrays[i][j][1] != "background: black")
+                            asd += 1;
+                    }
+                    this.loadFactor[i] = asd / this.size;
+                }
 
-                this.text=""
+                console.log(this.loadFactor)
+
+                this.text = this.message;
+                this.message = this.text;
+                this.text = "";
+            },
+            Delete(text) {
+                var asdf  = this.Exist(text)
+                var tempArray = this.arrays
+                if(asdf[0]==6){
+                    console.log("Key not exists any table");
+                    this.message.unshift("Key not exists any table")
+                }
+                else{
+                    console.log("Silme")
+                    console.log(asdf)
+                    tempArray[asdf[0]][asdf[1]][0] = "";
+                    tempArray[asdf[0]][asdf[1]][1] ="background: black" ;
+                    console.log(text+" deleted from table "+asdf[0]);
+                    this.message.unshift( text+" deleted from table "+asdf[0])
+                }
+
+                this.arrays = (tempArray)
+                console.log(this.arrays)
+                console.log(text)
+                this.text =""
+            },
+            Search(text) {
+                var ert = this.Exist(text)
+                if(ert[0]==6){
+                    this.message.unshift(text +" does not exist")
+                    console.log("Does not exist")
+                }
+                else{
+                    this.message.unshift( text+ " exists at table "+ert[0]+" and index " +ert[1])
+                    console.log("Exist at table "+ert[0]+" and index " +ert[1])
+                }
+                console.log(text)
+                this.text =""
+            },
+            Exist(text){
+                for (let i = 0; i < this.count; i++) {
+                    for (let j = 0; j < this.size; j++) {
+                        if (this.arrays[i][j][0] == text)
+                            return [i,j]
+                    }
+                }
+                return [6,31]
             }
-
         }
     }
 </script>
