@@ -18,7 +18,7 @@
             <v-text-field :rules="[sizeRule(size)]" v-model="size"/>
           </v-col>
         </v-row>
-        <v-row align="center" justify="center" class="pa-2">
+        <v-row align="center" justify="center" style="margin-bottom: 10px" class="pa-2">
           <v-btn rounded color="primary" dark @click="handleCreateButton()">Create Hash Tables</v-btn>
         </v-row>
       </v-card>

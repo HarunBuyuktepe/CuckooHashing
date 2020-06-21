@@ -16,7 +16,7 @@
             </tbody>
           </template>
         </v-simple-table>
-        {{loadFactor[index]}}
+        load factor : {{loadFactor[index]}} / {{size}}
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
@@ -29,11 +29,11 @@
           <v-text-field v-model="text"/>
           </v-col>
         </v-row>
-        <v-row justify="space-around">
-          <v-btn rounded color="primary" dark @click="Funktion(text)">Insert</v-btn>
-          <v-btn rounded color="primary" dark @click="Search(text)">Search</v-btn>
-          <v-btn rounded color="primary" dark @click="Delete(text)">Delete</v-btn>
-          <v-btn rounded color="primary" dark to="/">Reset The Constant</v-btn>
+        <v-row justify="center">
+          <v-btn style="margin-right: 6px" rounded color="primary" dark @click="Funktion(text)">Insert</v-btn>
+          <v-btn style="margin-right: 6px" rounded color="primary" dark @click="Search(text)">Search</v-btn>
+          <v-btn style="margin-right: 6px" rounded color="primary" dark @click="Delete(text)">Delete</v-btn>
+          <v-btn style="margin-right: 6px" rounded color="primary" dark to="/">Reset The Constant</v-btn>
         </v-row>
       </v-col>
     </v-row>
@@ -61,7 +61,7 @@
         text: "",
         message: [],
         log: [],
-        terminalTitle: "Terminal On"
+        terminalTitle: "Off"
       }
     },
     created() {
@@ -107,7 +107,7 @@
       // this.insert("wecbytmoılu", 1)
       // this.insert("gölçıöyn", 1)
       // this.insert("rılumythreg", 1)
-      console.log(this.arrays)
+      // console.log(this.arrays)
 
     },
 
@@ -130,8 +130,9 @@
       },
       prepareArrays(count, size) {
         this.arrays = new Array(count);
-
+        this.loadFactor = new Array(count);
         for (var j = 0; j < count; j++) {
+          this.loadFactor[j]=0
           this.temp = new Array(size);
           for (var i = 0; i < size; i++) {
             var temp2 = new Array(2);
@@ -141,7 +142,7 @@
           }
           this.arrays[j] = this.temp;
         }
-        this.loadFactor = new Array(count);
+
       },
       hashFunction1(key) {
         return (key % this.size);
@@ -159,13 +160,14 @@
         return ((key * 179 * 179) % this.size)
       },
       insert(key, tryC, color = "background:green", collusion = 0) {
-        if (collusion > this.count * this.size) {
+        if (collusion > this.count * this.size ) {
           console.log("Loop detected")
           this.$store.state.messageArray.unshift("Loop detected while inserting " + key + ".")
           return
         }
 
         var asdf = this.Exist(key)
+        // console.log("Satır 170 "+key)
         if (asdf[0] != 6) {
           console.log("Key already exists at table " + asdf[0] + "and index " + asdf[1])
           this.$store.state.messageArray.unshift(key + " already exists at table " + asdf[0] + " and index " + asdf[1])
@@ -173,8 +175,9 @@
         }
 
 
-        console.log("Key " + key + " will locate at hash table " + tryC);
-        this.$store.state.messageArray.unshift("* Key " + key + " will locate at hash table " + tryC);
+        // console.log("Key " + key + " will locate at hash table " + tryC);
+        // console.log("Satır 179 "+key)
+        // this.$store.state.messageArray.unshift("* Key " + key + " will locate at hash table " + tryC+"");
         var sum = 0;
         for (var i = 0; i < key.length; i++) {
           sum += (key.charAt(i)).charCodeAt(0);
@@ -194,81 +197,90 @@
             if (this.arrays[0][result1][0] == "") {
               this.arrays[0][result1][0] = key;
               this.arrays[0][result1][1] = color;
-              this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + collusion+ " collisions. ")
             } else {
               console.log("Collision(" + collusion + ") occured in table 1 for key " + key)
-              this.message.unshift("- Collision(" + collusion + ") occured in table 1 for key " + key)
+              // this.$store.state.messageArray.unshift("- Collision(" + collusion + ") occured in table 1 for key " + key)
               temp = this.arrays[0][result1][0];
               this.arrays[0][result1][0] = key;
-              this.insert(temp, 2, "background: red", ++collusion);
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + ++collusion+ " collisions. ")
+              this.insert(temp, 2, "background: red", collusion);
             }
 
             break
           case 2:
+
             if (this.arrays[1][result2][0] == "") {
               this.arrays[1][result2][0] = key;
               this.arrays[1][result2][1] = color;
-              this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + collusion+ " collisions. ")
             } else {
               console.log("Collision(" + collusion + ") occured in table 2 for key " + key)
-              this.message.unshift("- Collision(" + collusion + ") occured in table 2 for key " + key)
+              // this.$store.state.messageArray.unshift("- Collision(" + collusion + ") occured in table 2 for key " + key)
               temp = this.arrays[1][result2][0];
               this.arrays[1][result2][0] = key;
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + ++collusion+ " collisions. ")
               if (this.count > 2)
-                this.insert(temp, 3, "background: brown", ++collusion);
+                this.insert(temp, 3, "background: brown", collusion);
               else {
-                this.insert(temp, 1, color, ++collusion);
+                this.insert(temp, 1, color, collusion);
               }
             }
 
             break
           case 3:
+
             if (this.arrays[2][result3][0] == "") {
               this.arrays[2][result3][0] = key;
               this.arrays[2][result3][1] = color;
-              this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + collusion+ " collisions. ")
             } else {
               console.log("Collision(" + collusion + ") occured in table 3 for key " + key)
-              this.message.unshift("- Collision(" + collusion + ") occured in table 3 for key " + key)
+              // this.$store.state.messageArray.unshift("- Collision(" + collusion + ") occured in table 3 for key " + key)
               temp = this.arrays[2][result3][0];
               this.arrays[2][result3][0] = key;
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + ++collusion+ " collisions. ")
               if (this.count > 3)
-                this.insert(temp, 4, "background: aqua", ++collusion);
+                this.insert(temp, 4, "background: aqua", collusion);
               else
-                this.insert(temp, 1, color, ++collusion);
+                this.insert(temp, 1, color, collusion);
             }
             // this.arrays[2][result3][1] ="background: green";
 
             break
           case 4:
+
             if (this.arrays[3][result4][0] == "") {
               this.arrays[3][result4] [0] = key;
               this.arrays[3][result4][1] = color;
-              this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + collusion+ " collisions. ")
             } else {
               console.log("Collision(" + collusion + ") occured in table 4 for key " + key)
-              this.message.unshift("- Collision(" + collusion + ") occured in table 4 for key " + key)
+              // this.$store.state.messageArray.unshift("- Collision(" + collusion + ") occured in table 4 for key " + key)
               temp = this.arrays[3][result4][0];
               this.arrays[3][result4][0] = key;
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + ++collusion+ " collisions. ")
               if (this.count > 4)
-                this.insert(temp, 5, "background: orange", ++collusion);
+                this.insert(temp, 5, "background: orange", collusion);
               else
-                this.insert(temp, 1, color, ++collusion);
+                this.insert(temp, 1, color, collusion);
             }
             // this.arrays[3][result4][1] ="background: green";
 
             break
           case 5:
+
             if (this.arrays[4][result5][0] == "") {
               this.arrays[4][result5][0] = key;
               this.arrays[4][result5][1] = color;
-              this.message.unshift(key + " is placed in " + tryC + "with collision/s" + collusion)
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + collusion+ " collisions. ")
             } else {
               console.log("Collision(" + collusion + ") occured in table 5 for key " + key)
-              this.message.unshift("- Collision(" + collusion + ") occured in table 5 for key " + key)
+              // this.$store.state.messageArray.unshift("- Collision(" + collusion + ") occured in table 5 for key " + key)
               temp = this.arrays[4][result5][0];
+              this.$store.state.messageArray.unshift(key + " is placed in table " + tryC + " with " + ++collusion+ " collisions. ")
               this.arrays[4][result5][0] = key;
-              this.insert(temp, 1, color, ++collusion);
+              this.insert(temp, 1, color, collusion);
             }
             // this.arrays[4][result5][1] ="background: green";
 
@@ -281,7 +293,7 @@
             if (this.arrays[i][j][1] != "background: black")
               asd += 1;
           }
-          this.loadFactor[i] = asd / this.size;
+          this.loadFactor[i] = asd;
         }
 
         console.log(this.loadFactor)
@@ -292,31 +304,27 @@
       },
       Delete(text) {
         var asdf = this.Exist(text)
-        var tempArray = this.arrays
         if (asdf[0] == 6) {
           console.log("Key not exists any table");
-          this.message.unshift("Key not exists any table")
-        } else {
+          this.$store.state.messageArray.unshift("Key not exists any table")
+        } else if (text !=""){
           console.log("Silme")
           console.log(asdf)
-          tempArray[asdf[0]][asdf[1]][0] = "";
-          tempArray[asdf[0]][asdf[1]][1] = "background: black";
+          this.arrays[asdf[0]-1][asdf[1]][0] = "";
+          this.arrays[asdf[0]-1][asdf[1]][1] = "background: black";
           console.log(text + " deleted from table " + asdf[0]);
-          this.message.unshift(text + " deleted from table " + asdf[0])
+          this.$store.state.messageArray.unshift(text + " deleted from table " + asdf[0])
         }
 
-        this.arrays = (tempArray)
-        console.log(this.arrays)
-        console.log(text)
         this.text = ""
       },
       Search(text) {
         var ert = this.Exist(text)
         if (ert[0] == 6) {
-          this.message.unshift(text + " does not exist")
+          this.$store.state.messageArray.unshift(text + " does not exist")
           console.log("Does not exist")
         } else {
-          this.message.unshift(text + " exists at table " + ert[0] + " and index " + ert[1])
+          this.$store.state.messageArray.unshift(text + " exists at table " + ert[0] + " and index " + ert[1])
           console.log("Exist at table " + ert[0] + " and index " + ert[1])
         }
         console.log(text)

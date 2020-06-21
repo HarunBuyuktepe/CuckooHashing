@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 const state = {
   drawer: false,
-  messageArray: null
+  messageArray: []
 };
 
 const getters = {};
