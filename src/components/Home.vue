@@ -1,55 +1,68 @@
 <template>
-  <v-container fluid>
-
-    <v-row align="center" justify="center">
-      <v-col cols="4" sm="2">
-        <v-row align="center">
+  <v-container>
+    <v-row justify="center" align="center">
+      <v-card class="mx-auto" max-width="364" elevation="6">
+        <v-row style="height: 60px" align="center" justify="center" class="ma-2">
           <v-col>
-            Table Count
+            Table Count:
           </v-col>
           <v-col>
-            <v-text-field v-model="count"/>
+            <v-text-field :rules="[countRule(count)]" v-model="count"/>
           </v-col>
         </v-row>
-      </v-col>
-    </v-row>
-    <v-row align="center" justify="center">
-      <v-col cols="4" sm="2">
-        <v-row align="center">
+        <v-row style="height: 90px" align="center" justify="center" class="ma-2">
           <v-col>
             Table Size
           </v-col>
           <v-col>
-            <v-text-field v-model="size"/>
+            <v-text-field :rules="[sizeRule(size)]" v-model="size"/>
           </v-col>
         </v-row>
-      </v-col>
-    </v-row>
-    <v-row align="center" justify="center">
-      <v-btn rounded color="primary" dark @click="handleCreateButton()">Create Hash Tables</v-btn>
-      <v-label>text</v-label>
+        <v-row align="center" justify="center" class="pa-2">
+          <v-btn rounded color="primary" dark @click="handleCreateButton()">Create Hash Tables</v-btn>
+        </v-row>
+      </v-card>
     </v-row>
   </v-container>
 </template>
 
 <script>
-
-
   export default {
     name: "Home",
-    data () {
+    data() {
       return {
         size: "",
-        count:"",
-        text :"",
+        count: "",
+        text: "",
+        validCount: false,
+        validSize: false
       }
     },
-    methods:{
+    methods: {
       handleCreateButton() {
-        if(Number(this.size) > 9 && Number(this.size) < 31 && Number(this.count) > 0 && Number(this.count) < 11)
-          this.$router.push({name: "Program", params: { size: this.size, count: this.count}})
-        else
-          this.text = "Enter between valid interval";
+        if (this.validCount  && this.validSize ) {
+          this.$router.push({name: "Program", params: {size: this.size, count: this.count}})
+        }
+      },
+      countRule(count) {
+        if (count < 2 || count > 5) {
+          this.validCount = false
+          return "2-5 arası gir"
+        }
+        else {
+          this.validCount = true
+          return true
+        }
+      },
+      sizeRule(size) {
+        if (size < 10 || size > 30) {
+          this.validSize = false
+          return "10 and 30 "
+        }
+        else {
+          this.validSize = true
+          return true
+        }
       }
     }
   }
