@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-col cols="2" v-for="(array,index) in arrays" :key="array.id">
-        <v-simple-table dark>
+        <v-simple-table dark light="true">
           <template v-slot:default>
             <thead>
             <tr>
