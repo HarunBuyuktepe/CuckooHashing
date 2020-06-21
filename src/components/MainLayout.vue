@@ -24,6 +24,17 @@
     <v-content>
         <router-view />
     </v-content>
+    <v-footer
+            absolute
+            class="font-weight-medium"
+    >
+      <v-col
+              class="text-center"
+              cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>@HarunBuyuktepe</strong>
+      </v-col>
+    </v-footer>
   </v-container >
 </template>
 

@@ -61,7 +61,7 @@
         text: "",
         message: [],
         log: [],
-        terminalTitle: "Off"
+        terminalTitle: "Terminal On"
       }
     },
     created() {

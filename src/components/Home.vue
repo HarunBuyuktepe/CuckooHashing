@@ -23,7 +23,19 @@
         </v-row>
       </v-card>
     </v-row>
+    <v-footer
+            absolute
+            class="font-weight-medium"
+    >
+      <v-col
+              class="text-center"
+              cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>@HarunBuyuktepe</strong>
+      </v-col>
+    </v-footer>
   </v-container>
+
 </template>
 
 <script>
@@ -47,7 +59,7 @@
       countRule(count) {
         if (count < 2 || count > 5) {
           this.validCount = false
-          return "2-5 arası gir"
+          return "Enter value between 2 and 5"
         }
         else {
           this.validCount = true
@@ -57,7 +69,7 @@
       sizeRule(size) {
         if (size < 10 || size > 30) {
           this.validSize = false
-          return "10 and 30 "
+          return "Enter value between 10 and 30"
         }
         else {
           this.validSize = true
